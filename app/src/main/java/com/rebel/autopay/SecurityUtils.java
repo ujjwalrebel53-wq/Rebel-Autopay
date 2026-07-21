@@ -1,4 +1,4 @@
-package net.one97.paytm;
+package com.rebel.autopay;
 
 import android.content.Context;
 import android.content.pm.Signature;
@@ -8,8 +8,7 @@ import java.security.MessageDigest;
 
 public class SecurityUtils {
 
-    private static final String TELEGRAM_COMMUNITY = "https://t.me/+wEODy3Qd2xRhZTI1";
-    private static final String TELEGRAM_OWNER = "https://t.me/+wEODy3Qd2xRhZTI1";
+    private static final String TELEGRAM_LINK = "https://t.me/+wEODy3Qd2xRhZTI1";
 
     private static Context appContext;
     private static boolean isVerified;
@@ -43,7 +42,7 @@ public class SecurityUtils {
             } catch (Exception ignored) {
             }
         }
-        return TELEGRAM_COMMUNITY;
+        return TELEGRAM_LINK;
     }
 
     public static String getTelegramOwner() {
@@ -56,7 +55,7 @@ public class SecurityUtils {
             } catch (Exception ignored) {
             }
         }
-        return TELEGRAM_OWNER;
+        return TELEGRAM_LINK;
     }
 
     public static native String getCommunityLink();

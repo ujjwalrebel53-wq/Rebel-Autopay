@@ -1,4 +1,4 @@
-package net.one97.paytm;
+package com.rebel.autopay;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,12 +7,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
