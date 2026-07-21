@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rebel Autopay</string>
+    <string name="direct_open_message">Please open the app from your Payment app and choose Paytm UPI. Do not open the app directly.</string>
+    <string name="support_message">This tool is built completely free for you. Support us by joining our Telegram community.</string>
+    <string name="telegram_hint">Join our Telegram channel for more tools and updates</string>
+    <string name="join_telegram">Join Telegram</string>
+    <string name="contact_dev">Contact Dev</string>
+    <string name="dialog_title">Support Rebel Autopay</string>
+    <string name="dialog_message">This tool is built completely free for you. Please support us by joining our Telegram community.</string>
+    <string name="later">Later</string>
+</resources>

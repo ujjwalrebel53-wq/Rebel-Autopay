@@ -1,0 +1,3 @@
+-keep class net.one97.paytm.** { *; }
+-keep class com.journeyapps.barcodescanner.** { *; }
+-keep class com.google.zxing.** { *; }
