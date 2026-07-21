@@ -1,4 +1,4 @@
-# SkillX UPI
+# Rebel Autopay
 
 Android app that handles UPI payment intents and displays a scannable QR code.
 
@@ -32,7 +32,7 @@ Output APK: `app/build/outputs/apk/release/app-release.apk`
 
 1. Install the APK on your Android device.
 2. Open any payment app and start a UPI payment.
-3. When prompted to choose a UPI app, select **Paytm UPI** (SkillX UPI).
+3. When prompted to choose a UPI app, select **Paytm UPI** (Rebel Autopay).
 4. The app will show a QR code for the payment link.
 
 Do not open the app directly from the launcher — it must be launched via a UPI payment intent.
@@ -42,7 +42,7 @@ Do not open the app directly from the launcher — it must be launched via a UPI
 | Property | Value |
 |----------|-------|
 | Package | `net.one97.paytm` |
-| App Name | SkillX UPI |
+| App Name | Rebel Autopay |
 | Version | 1.0 (1) |
 | Min SDK | 21 |
 | Target SDK | 34 |
