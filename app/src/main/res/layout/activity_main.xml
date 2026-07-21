@@ -64,7 +64,7 @@
                             android:letterSpacing="0.15"
                             android:text="@string/brand_rebel"
                             android:textColor="@color/accent_gold"
-                            android:textSize="11sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -155,7 +155,7 @@
                             android:letterSpacing="0.18"
                             android:text="@string/brand_rebel"
                             android:textColor="@color/accent_gold"
-                            android:textSize="10sp"
+                            android:textSize="17sp"
                             android:textStyle="bold" />
 
                         <TextView
