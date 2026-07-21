@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d0d18" />
+  <title>Tower Intel Hub — Live Tower & Moment Tracker</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="brand">
+        <div class="brand-icon">TX</div>
+        <div>
+          <h1>Tower Intel Hub</h1>
+          <p>Live towers · Device load · Camera moments</p>
+        </div>
+      </div>
+      <div class="nav-links">
+        <button type="button" data-section="dashboard" class="active">Dashboard</button>
+        <button type="button" data-section="camera">Camera</button>
+        <button type="button" data-section="moments">Moments</button>
+        <button type="button" data-section="settings">Settings</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Surrounding towers + live moment capture</h2>
+      <p>
+        Tower data collector se live device counts dekho, aur camera se site moments capture karo —
+        motion detect hone par auto-snapshot with GPS + timestamp metadata.
+      </p>
+    </section>
+
+  <!-- Dashboard -->
+    <section id="dashboard" class="section active">
+      <div class="grid grid-3" style="margin-bottom: 1rem;">
+        <div class="card">
+          <h3><span class="dot"></span> Active Towers</h3>
+          <div class="stat-value" id="statTowers">—</div>
+          <div class="stat-label">Collector se live</div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> Total Devices</h3>
+          <div class="stat-value" id="statDevices">—</div>
+          <div class="stat-label">Observed on all towers</div>
+        </div>
+        <div class="card">
+          <h3><span class="dot"></span> Captured Moments</h3>
+          <div class="stat-value" id="statMoments">0</div>
+          <div class="stat-label">Camera session</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h3><span class="dot"></span> Tower Device Map</h3>
+          <div class="form-row">
+            <input type="text" id="collectorUrl" placeholder="Collector URL e.g. http://localhost:8787" />
+            <button type="button" class="btn btn-primary" id="btnRefreshTowers">Refresh</button>
+          </div>
+          <div class="status-bar" id="towerStatus">Collector URL set karo aur Refresh dabao.</div>
+          <div class="tower-list" id="towerList"></div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span> Your Location</h3>
+          <div class="status-bar" id="geoStatus">GPS permission pending...</div>
+          <div style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-2);">
+            <div>Lat: <span id="geoLat">—</span></div>
+            <div>Lon: <span id="geoLon">—</span></div>
+            <div>Accuracy: <span id="geoAcc">—</span></div>
+          </div>
+          <div style="margin-top: 1rem;">
+            <a class="btn" id="mapLink" href="#" target="_blank" rel="noopener">Open in OpenStreetMap</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Camera -->
+    <section id="camera" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h3><span class="dot"></span> Live Camera Feed</h3>
+          <div class="camera-wrap">
+            <video id="cameraVideo" autoplay playsinline muted></video>
+            <canvas id="motionCanvas" hidden></canvas>
+            <canvas id="captureCanvas" hidden></canvas>
+            <div class="camera-overlay" id="cameraOverlay"></div>
+            <div class="camera-badge" id="cameraBadge" hidden>
+              <span class="rec-dot"></span>
+              <span id="cameraBadgeText">LIVE</span>
+            </div>
+          </div>
+          <div class="camera-controls">
+            <button type="button" class="btn btn-primary" id="btnStartCamera">Start Camera</button>
+            <button type="button" class="btn" id="btnStopCamera" disabled>Stop</button>
+            <button type="button" class="btn" id="btnCapture" disabled>Capture Moment</button>
+            <button type="button" class="btn" id="btnSwitchCam" disabled>Flip Camera</button>
+          </div>
+          <div class="camera-controls">
+            <label class="toggle">
+              <input type="checkbox" id="motionDetect" checked />
+              Motion auto-capture
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="linkTower" checked />
+              Link tower metadata
+            </label>
+          </div>
+          <div class="status-bar" id="cameraStatus">Camera start karo — browser permission allow karna hoga.</div>
+        </div>
+
+        <div class="card">
+          <h3><span class="dot"></span> Motion Sensitivity</h3>
+          <div class="form-row">
+            <label style="color: var(--text-2); font-size: 0.85rem; width: 100%;">
+              Threshold: <span id="sensitivityVal">25</span>
+            </label>
+            <input type="range" id="sensitivity" min="5" max="80" value="25" style="width: 100%;" />
+          </div>
+          <div class="form-row">
+            <label style="color: var(--text-2); font-size: 0.85rem; width: 100%;">
+              Cooldown (sec): <span id="cooldownVal">3</span>
+            </label>
+            <input type="range" id="cooldown" min="1" max="15" value="3" style="width: 100%;" />
+          </div>
+          <h3 style="margin-top: 1rem;"><span class="dot"></span> Recent Auto-Captures</h3>
+          <div class="moments-grid" id="liveMoments"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Moments gallery -->
+    <section id="moments" class="section">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <h3><span class="dot"></span> All Captured Moments</h3>
+          <button type="button" class="btn" id="btnClearMoments">Clear All</button>
+        </div>
+        <div class="moments-grid" id="allMoments"></div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="settings" class="section">
+      <div class="card">
+        <h3><span class="dot"></span> Configuration</h3>
+        <div class="form-row">
+          <input type="text" id="settingsCollector" placeholder="Collector API URL" />
+          <button type="button" class="btn btn-primary" id="btnSaveSettings">Save</button>
+        </div>
+        <div class="form-row">
+          <input type="text" id="deviceId" placeholder="Device ID for reporting" />
+        </div>
+        <div class="status-bar" id="settingsStatus">Settings localStorage mein save hote hain.</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="imageModal">
+    <button type="button" class="btn modal-close" id="modalClose">Close</button>
+    <img id="modalImage" alt="Captured moment" />
+  </div>
+
+  <footer>
+    Tower Intel Hub · Camera moments are stored locally in your browser · SkillX
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
