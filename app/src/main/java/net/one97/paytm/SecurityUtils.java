@@ -1,4 +1,4 @@
-package com.rebel.autopay;
+package net.one97.paytm;
 
 import android.content.Context;
 import android.content.pm.Signature;
