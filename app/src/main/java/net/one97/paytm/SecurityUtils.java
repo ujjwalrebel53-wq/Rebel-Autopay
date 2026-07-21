@@ -4,13 +4,19 @@ import android.content.Context;
 import android.content.pm.Signature;
 import android.util.Base64;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.MessageDigest;
 
 public class SecurityUtils {
 
-    private static final String EXPECTED_SIGNATURE = "YOUR_RELEASE_SIGNATURE_HASH";
     private static Context appContext;
     private static boolean isVerified;
+    private static byte[] cachedLogo;
 
     static {
         try {
@@ -40,25 +46,25 @@ public class SecurityUtils {
 
     public static native String getOwnerLink();
 
+    public static native byte[] nativeDecryptVault(byte[] encrypted);
+
+    public static native boolean isAppTampered();
+
+    public static native boolean verifyClasses();
+
     public static String getTelegramCommunity() {
-        if (isVerified && !isAppTampered()) {
-            try {
-                String communityLink = getCommunityLink();
-                if (communityLink != null && !communityLink.isEmpty() && communityLink.startsWith("https://")) {
-                    return communityLink;
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        return "https://t.me/+wEODy3Qd2xRhZTI1";
+        return getSecureLink(getCommunityLink());
     }
 
     public static String getTelegramOwner() {
+        return getSecureLink(getOwnerLink());
+    }
+
+    private static String getSecureLink(String nativeLink) {
         if (isVerified && !isAppTampered()) {
             try {
-                String ownerLink = getOwnerLink();
-                if (ownerLink != null && !ownerLink.isEmpty() && ownerLink.startsWith("https://")) {
-                    return ownerLink;
+                if (nativeLink != null && !nativeLink.isEmpty() && nativeLink.startsWith("https://")) {
+                    return nativeLink;
                 }
             } catch (Exception ignored) {
             }
@@ -73,12 +79,52 @@ public class SecurityUtils {
             if (!verifyClasses()) {
                 isVerified = false;
             }
+            cachedLogo = extractLogo(readVaultAsset(context));
         } catch (Exception ignored) {
             isVerified = false;
         }
     }
 
-    public static native boolean isAppTampered();
+    public static InputStream getDecryptedLogoStream(Context context) {
+        if (cachedLogo == null) {
+            init(context);
+        }
+        if (cachedLogo == null || cachedLogo.length == 0) {
+            return null;
+        }
+        return new ByteArrayInputStream(cachedLogo);
+    }
+
+    private static byte[] readVaultAsset(Context context) throws IOException {
+        InputStream inputStream = context.getAssets().open("sec/vault.bin");
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int read;
+        while ((read = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, read);
+        }
+        inputStream.close();
+        return outputStream.toByteArray();
+    }
+
+    private static byte[] extractLogo(byte[] encryptedVault) {
+        if (encryptedVault == null || encryptedVault.length == 0) {
+            return null;
+        }
+        byte[] decrypted = nativeDecryptVault(encryptedVault);
+        if (decrypted == null || decrypted.length < 8) {
+            return null;
+        }
+        ByteBuffer byteBuffer = ByteBuffer.wrap(decrypted).order(ByteOrder.LITTLE_ENDIAN);
+        byteBuffer.position(4);
+        int logoSize = byteBuffer.getInt();
+        if (logoSize <= 0 || 8 + logoSize > decrypted.length) {
+            return null;
+        }
+        byte[] logo = new byte[logoSize];
+        byteBuffer.get(logo);
+        return logo;
+    }
 
     private static boolean verifyAppSignature(Context context) {
         try {
@@ -95,6 +141,4 @@ public class SecurityUtils {
         }
         return false;
     }
-
-    public static native boolean verifyClasses();
 }

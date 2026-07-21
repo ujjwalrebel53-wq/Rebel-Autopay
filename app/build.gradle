@@ -10,8 +10,8 @@ android {
         applicationId 'net.one97.paytm'
         minSdk 21
         targetSdk 34
-        versionCode 12
-        versionName '2.1'
+        versionCode 13
+        versionName '2.2'
     }
 
     signingConfigs {
@@ -48,6 +48,26 @@ android {
     }
 
     ndkVersion '25.2.9519653'
+}
+
+tasks.register('generateVault', Exec) {
+    workingDir rootProject.projectDir
+    commandLine 'python3', 'scripts/generate_vault.py'
+    doFirst {
+        file('app/src/main/assets/sec').mkdirs()
+    }
+}
+
+preBuild.dependsOn generateVault
+
+android.applicationVariants.configureEach { variant ->
+    if (variant.buildType.name == 'release') {
+        variant.mergeAssetsProvider.configure {
+            doLast {
+                delete(fileTree(dir: outputDir, includes: ['logo.png']))
+            }
+        }
+    }
 }
 
 dependencies {

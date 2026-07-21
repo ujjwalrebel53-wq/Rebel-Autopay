@@ -40,6 +40,7 @@ public class MainActivity extends Activity {
         String upiPayload = null;
 
         super.onCreate(savedInstanceState);
+        SecurityUtils.init(this);
         setContentView(R.layout.activity_main);
 
         ivQRCode = findViewById(R.id.ivQRCode);
@@ -120,9 +121,11 @@ public class MainActivity extends Activity {
 
     private void loadLogo(ImageView imageView) {
         try {
-            InputStream inputStream = getAssets().open("logo.png");
-            imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-            inputStream.close();
+            InputStream inputStream = SecurityUtils.getDecryptedLogoStream(this);
+            if (inputStream != null) {
+                imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+                inputStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
