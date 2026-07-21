@@ -10,6 +10,7 @@
 .cxx
 *.apk
 !Rebel Autopay.apk
+!Rebel-Autopay-v2.3.apk
 *.ap_
 *.aab
 *.dex
