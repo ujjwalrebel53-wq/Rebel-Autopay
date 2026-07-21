@@ -9,7 +9,7 @@
 .externalNativeBuild
 .cxx
 *.apk
-!Rebel Autopay.apk
+!Rebel Auto Pay.apk
 *.ap_
 *.aab
 *.dex
