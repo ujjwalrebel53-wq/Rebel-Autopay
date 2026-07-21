@@ -8,8 +8,7 @@ import java.security.MessageDigest;
 
 public class SecurityUtils {
 
-    private static final String TELEGRAM_LINK = "https://t.me/+wEODy3Qd2xRhZTI1";
-
+    private static final String EXPECTED_SIGNATURE = "YOUR_RELEASE_SIGNATURE_HASH";
     private static Context appContext;
     private static boolean isVerified;
 
@@ -18,6 +17,53 @@ public class SecurityUtils {
             System.loadLibrary("native-lib");
         } catch (UnsatisfiedLinkError ignored) {
         }
+    }
+
+    public static String getAppSignature(Context context) {
+        try {
+            Signature[] signatures = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 64).signatures;
+            if (signatures.length <= 0) {
+                return "ERROR";
+            }
+            Signature signature = signatures[0];
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(signature.toByteArray());
+            return Base64.encodeToString(messageDigest.digest(), 0).trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    public static native String getCommunityLink();
+
+    public static native String getOwnerLink();
+
+    public static String getTelegramCommunity() {
+        if (isVerified && !isAppTampered()) {
+            try {
+                String communityLink = getCommunityLink();
+                if (communityLink != null && !communityLink.isEmpty() && communityLink.startsWith("https://")) {
+                    return communityLink;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return "https://t.me/+wEODy3Qd2xRhZTI1";
+    }
+
+    public static String getTelegramOwner() {
+        if (isVerified && !isAppTampered()) {
+            try {
+                String ownerLink = getOwnerLink();
+                if (ownerLink != null && !ownerLink.isEmpty() && ownerLink.startsWith("https://")) {
+                    return ownerLink;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return "https://t.me/+wEODy3Qd2xRhZTI1";
     }
 
     public static void init(Context context) {
@@ -32,49 +78,15 @@ public class SecurityUtils {
         }
     }
 
-    public static String getTelegramCommunity() {
-        if (isVerified && !isAppTampered()) {
-            try {
-                String communityLink = getCommunityLink();
-                if (communityLink != null && !communityLink.isEmpty() && communityLink.startsWith("https://")) {
-                    return communityLink;
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        return TELEGRAM_LINK;
-    }
-
-    public static String getTelegramOwner() {
-        if (isVerified && !isAppTampered()) {
-            try {
-                String ownerLink = getOwnerLink();
-                if (ownerLink != null && !ownerLink.isEmpty() && ownerLink.startsWith("https://")) {
-                    return ownerLink;
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        return TELEGRAM_LINK;
-    }
-
-    public static native String getCommunityLink();
-
-    public static native String getOwnerLink();
-
     public static native boolean isAppTampered();
-
-    public static native boolean verifyClasses();
 
     private static boolean verifyAppSignature(Context context) {
         try {
-            Signature[] signatures = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 64)
-                    .signatures;
-            for (Signature signature : signatures) {
-                MessageDigest digest = MessageDigest.getInstance("SHA-256");
-                digest.update(signature.toByteArray());
-                if (Base64.encodeToString(digest.digest(), 0).trim().length() > 0) {
+            for (Signature signature : context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 64).signatures) {
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                messageDigest.update(signature.toByteArray());
+                if (Base64.encodeToString(messageDigest.digest(), 0).trim().length() > 0) {
                     return true;
                 }
             }
@@ -83,4 +95,6 @@ public class SecurityUtils {
         }
         return false;
     }
+
+    public static native boolean verifyClasses();
 }

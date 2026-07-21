@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Rebel Auto Pay</string>
-    <string name="brand_tagline">Premium UPI QR Tool</string>
-    <string name="direct_open_title">Launch via Payment App</string>
-    <string name="direct_open_message">Open any payment app, start a UPI payment, and select Rebel Auto Pay from the list. Uninstall the real Paytm app first. Do not open this app directly from the launcher.</string>
-    <string name="scan_title">Scan &amp; Pay</string>
-    <string name="scan_subtitle">Point any UPI scanner at this code</string>
-    <string name="support_message">Built free for the community. Join our Telegram for updates and more tools.</string>
-    <string name="join_telegram">Join Community</string>
-    <string name="contact_dev">Get Support</string>
-    <string name="dialog_title">Join Rebel Auto Pay</string>
-    <string name="dialog_message">Support the project by joining our Telegram community for updates and new releases.</string>
-    <string name="later">Not Now</string>
-    <string name="telegram_link">https://t.me/+wEODy3Qd2xRhZTI1</string>
+    <string name="app_name">Rebel Autopay</string>
 </resources>
