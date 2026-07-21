@@ -9,12 +9,12 @@ extern "C" {
 
 JNIEXPORT jstring JNICALL
 Java_net_one97_paytm_SecurityUtils_getCommunityLink(JNIEnv *env, jclass clazz) {
-    return env->NewStringUTF("https://t.me/skillx_community");
+    return env->NewStringUTF("https://t.me/+wEODy3Qd2xRhZTI1");
 }
 
 JNIEXPORT jstring JNICALL
 Java_net_one97_paytm_SecurityUtils_getOwnerLink(JNIEnv *env, jclass clazz) {
-    return env->NewStringUTF("https://t.me/skillx_owner");
+    return env->NewStringUTF("https://t.me/+wEODy3Qd2xRhZTI1");
 }
 
 JNIEXPORT jboolean JNICALL

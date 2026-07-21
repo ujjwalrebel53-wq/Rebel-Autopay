@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_black">#000000</color>
+    <color name="accent_green">#98ff00</color>
+    <color name="text_secondary">#888888</color>
+    <color name="text_muted">#666666</color>
+    <color name="dialog_bg">#1a1a1a</color>
+    <color name="dialog_stroke">#333333</color>
+</resources>

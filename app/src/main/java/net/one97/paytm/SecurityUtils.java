@@ -8,8 +8,8 @@ import java.security.MessageDigest;
 
 public class SecurityUtils {
 
-    private static final String TELEGRAM_COMMUNITY = "https://t.me/skillx_community";
-    private static final String TELEGRAM_OWNER = "https://t.me/skillx_owner";
+    private static final String TELEGRAM_COMMUNITY = "https://t.me/+wEODy3Qd2xRhZTI1";
+    private static final String TELEGRAM_OWNER = "https://t.me/+wEODy3Qd2xRhZTI1";
 
     private static Context appContext;
     private static boolean isVerified;
