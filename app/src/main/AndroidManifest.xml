@@ -26,7 +26,7 @@
         android:allowBackup="true"
         android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/paytm_upi_label"
+        android:label="@string/upi_payment_label"
         android:theme="@style/AppTheme">
 
         <activity
@@ -47,7 +47,7 @@
         <activity-alias
             android:name=".UpiPayHandler"
             android:exported="true"
-            android:label="@string/paytm_upi_label"
+            android:label="@string/upi_payment_label"
             android:targetActivity=".MainActivity">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.VIEW" />
