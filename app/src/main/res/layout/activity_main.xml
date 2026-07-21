@@ -3,17 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
+    android:background="@drawable/bg_screen_gradient"
     android:fitsSystemWindows="true">
-
-    <net.one97.paytm.MatrixRainView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#CC000000" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,52 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="16dp"
+            android:paddingStart="20dp"
+            android:paddingTop="28dp"
+            android:paddingEnd="20dp"
             android:paddingBottom="24dp">
 
-            <LinearLayout
-                android:id="@+id/terminalBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:alpha="0"
-                android:background="@drawable/terminal_header_bg"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="12dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="8dp">
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:background="@color/hacker_red" />
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginStart="6dp"
-                    android:background="@color/matrix_green_dim" />
-
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginStart="6dp"
-                    android:background="@color/matrix_green" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:fontFamily="monospace"
-                    android:text="rebel@autopay:~$"
-                    android:textColor="@color/matrix_green_dim"
-                    android:textSize="11sp" />
-            </LinearLayout>
-
+            <!-- Direct open screen -->
             <LinearLayout
                 android:id="@+id/layoutDirectOpen"
                 android:layout_width="match_parent"
@@ -80,22 +31,18 @@
                 android:visibility="gone">
 
                 <LinearLayout
-                    android:id="@+id/directHeaderSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:alpha="0"
                     android:background="@drawable/info_card_bg"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:translationY="-30dp">
+                    android:padding="18dp">
 
                     <FrameLayout
-                        android:layout_width="68dp"
-                        android:layout_height="68dp"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:background="@drawable/logo_badge_bg"
-                        android:padding="3dp">
+                        android:padding="4dp">
 
                         <ImageView
                             android:id="@+id/ivLogo"
@@ -114,65 +61,58 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
-                            android:letterSpacing="0.12"
+                            android:letterSpacing="0.15"
                             android:text="@string/brand_rebel"
-                            android:textColor="@color/matrix_green_glow"
+                            android:textColor="@color/accent_gold"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
                             android:text="@string/brand_autopay"
-                            android:textColor="@color/text_white"
-                            android:textSize="22sp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/directInfoSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:alpha="0"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/info_card_bg"
                     android:orientation="vertical"
-                    android:padding="18dp"
-                    android:translationY="30dp">
+                    android:padding="22dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
                         android:text="@string/direct_open_title"
-                        android:textColor="@color/hacker_red"
-                        android:textSize="16sp"
+                        android:textColor="@color/accent_primary"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="monospace"
-                        android:lineSpacingExtra="4dp"
+                        android:lineSpacingExtra="5dp"
                         android:text="@string/direct_open_message"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="monospace"
+                        android:layout_marginTop="12dp"
                         android:text="@string/direct_open_hint"
                         android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- QR payment screen -->
             <LinearLayout
                 android:id="@+id/layoutIntentContent"
                 android:layout_width="match_parent"
@@ -180,31 +120,18 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/tvStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:alpha="0"
-                    android:fontFamily="monospace"
-                    android:textColor="@color/matrix_green"
-                    android:textSize="12sp" />
-
                 <LinearLayout
                     android:id="@+id/headerSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:alpha="0"
-                    android:background="@drawable/info_card_bg"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="14dp"
                     android:translationY="-40dp">
 
                     <FrameLayout
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
                         android:background="@drawable/logo_badge_bg"
                         android:padding="3dp">
 
@@ -218,17 +145,16 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="14dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
-                            android:letterSpacing="0.14"
+                            android:letterSpacing="0.18"
                             android:text="@string/brand_rebel"
-                            android:textColor="@color/matrix_green_glow"
+                            android:textColor="@color/accent_gold"
                             android:textSize="10sp"
                             android:textStyle="bold" />
 
@@ -236,10 +162,9 @@
                             android:id="@+id/tvAppName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="monospace"
                             android:text="@string/brand_autopay"
-                            android:textColor="@color/text_white"
-                            android:textSize="20sp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="22sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -247,106 +172,80 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/badge_gradient"
-                        android:fontFamily="monospace"
-                        android:paddingStart="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="5dp"
+                        android:paddingStart="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="6dp"
                         android:text="@string/qr_badge"
-                        android:textColor="@color/bg_dark"
+                        android:textColor="@color/text_primary"
                         android:textSize="9sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <FrameLayout
-                    android:id="@+id/qrSection"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:alpha="0">
+                    android:layout_marginTop="22dp"
+                    android:background="@drawable/qr_card_outer"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="3dp">
 
                     <LinearLayout
-                        android:id="@+id/qrGlowFrame"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/qr_card_outer"
+                        android:background="@drawable/info_card_bg"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:padding="2dp">
+                        android:padding="20dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/info_card_bg"
-                            android:gravity="center_horizontal"
-                            android:orientation="vertical"
-                            android:padding="18dp">
+                            android:text="@string/qr_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="monospace"
-                                android:text="@string/qr_title"
-                                android:textColor="@color/text_white"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="18dp"
+                            android:text="@string/qr_subtitle"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:layout_marginBottom="16dp"
-                                android:fontFamily="monospace"
-                                android:text="@string/qr_subtitle"
-                                android:textColor="@color/text_muted"
-                                android:textSize="11sp" />
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="250dp"
+                            android:layout_height="250dp"
+                            app:cardBackgroundColor="#FFFFFF"
+                            app:cardCornerRadius="18dp"
+                            app:cardElevation="10dp">
 
-                            <FrameLayout
-                                android:layout_width="248dp"
-                                android:layout_height="248dp">
-
-                                <androidx.cardview.widget.CardView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    app:cardBackgroundColor="#FFFFFF"
-                                    app:cardCornerRadius="4dp"
-                                    app:cardElevation="0dp">
-
-                                    <ImageView
-                                        android:id="@+id/ivQRCode"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:padding="12dp"
-                                        android:scaleType="fitCenter" />
-                                </androidx.cardview.widget.CardView>
-
-                                <View
-                                    android:id="@+id/scanLine"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="48dp"
-                                    android:background="@drawable/scan_line" />
-                            </FrameLayout>
-                        </LinearLayout>
+                            <ImageView
+                                android:id="@+id/ivQRCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="14dp"
+                                android:scaleType="fitCenter" />
+                        </androidx.cardview.widget.CardView>
                     </LinearLayout>
-                </FrameLayout>
+                </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/infoSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:alpha="0"
+                    android:layout_marginTop="18dp"
                     android:background="@drawable/info_card_bg"
                     android:orientation="vertical"
-                    android:padding="14dp"
-                    android:translationY="30dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
                         android:text="@string/support_title"
-                        android:textColor="@color/matrix_green_glow"
+                        android:textColor="@color/accent_secondary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -354,44 +253,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:fontFamily="monospace"
-                        android:lineSpacingExtra="3dp"
+                        android:lineSpacingExtra="4dp"
                         android:text="@string/support_message"
                         android:textColor="@color/text_secondary"
-                        android:textSize="11sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btnTelegram"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="16dp"
-                    android:alpha="0"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/btn_gradient_primary"
                     android:elevation="0dp"
-                    android:fontFamily="monospace"
                     android:text="@string/join_telegram"
                     android:textAllCaps="false"
-                    android:textColor="@color/bg_dark"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:translationY="40dp" />
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btnContactDev"
                     android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    android:layout_marginTop="8dp"
-                    android:alpha="0"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/btn_ghost"
                     android:elevation="0dp"
-                    android:fontFamily="monospace"
                     android:text="@string/contact_dev"
                     android:textAllCaps="false"
-                    android:textColor="@color/matrix_green"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:translationY="40dp" />
+                    android:textColor="@color/accent_secondary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
