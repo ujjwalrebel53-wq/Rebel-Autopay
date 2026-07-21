@@ -7,12 +7,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.TranslateAnimation;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -27,12 +31,21 @@ public class MainActivity extends Activity {
     private ImageView ivQRCode;
     private ImageView ivLogo;
     private ImageView ivLogoIntent;
+    private TextView tvStatus;
+    private View terminalBar;
+    private View scanLine;
     private LinearLayout headerSection;
+    private LinearLayout directHeaderSection;
+    private LinearLayout directInfoSection;
+    private View qrSection;
+    private View qrGlowFrame;
+    private LinearLayout infoSection;
     private LinearLayout layoutDirectOpen;
     private LinearLayout layoutIntentContent;
     private Button btnTelegram;
     private Button btnContactDev;
     private Intent launchIntent;
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +58,15 @@ public class MainActivity extends Activity {
         ivQRCode = findViewById(R.id.ivQRCode);
         ivLogo = findViewById(R.id.ivLogo);
         ivLogoIntent = findViewById(R.id.ivLogoIntent);
+        tvStatus = findViewById(R.id.tvStatus);
+        terminalBar = findViewById(R.id.terminalBar);
+        scanLine = findViewById(R.id.scanLine);
         headerSection = findViewById(R.id.headerSection);
+        directHeaderSection = findViewById(R.id.directHeaderSection);
+        directInfoSection = findViewById(R.id.directInfoSection);
+        qrSection = findViewById(R.id.qrSection);
+        qrGlowFrame = findViewById(R.id.qrGlowFrame);
+        infoSection = findViewById(R.id.infoSection);
         layoutDirectOpen = findViewById(R.id.layoutDirectOpen);
         layoutIntentContent = findViewById(R.id.layoutIntentContent);
         btnTelegram = findViewById(R.id.btnTelegram);
@@ -58,21 +79,23 @@ public class MainActivity extends Activity {
             hasUpiIntent = "upi".equals(launchIntent.getData().getScheme());
         }
 
-        if (hasUpiIntent) {
-            layoutIntentContent.setVisibility(android.view.View.VISIBLE);
-            layoutDirectOpen.setVisibility(android.view.View.GONE);
-            loadLogo(ivLogoIntent);
+        animateTerminalBar();
 
-            AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-            alphaAnimation.setDuration(800L);
-            alphaAnimation.setStartOffset(300L);
-            TranslateAnimation translateAnimation = new TranslateAnimation(0.0f, 0.0f, -50.0f, 0.0f);
-            translateAnimation.setDuration(800L);
-            translateAnimation.setStartOffset(300L);
-            headerSection.setAlpha(1.0f);
-            headerSection.setTranslationY(0.0f);
-            headerSection.startAnimation(alphaAnimation);
-            headerSection.startAnimation(translateAnimation);
+        if (hasUpiIntent) {
+            layoutIntentContent.setVisibility(View.VISIBLE);
+            layoutDirectOpen.setVisibility(View.GONE);
+            loadLogo(ivLogoIntent);
+            runBootSequence(() -> {
+                animateView(headerSection, R.anim.slide_fade_down, 0L);
+                animateView(qrSection, R.anim.scale_fade_in, 200L, () -> {
+                    qrGlowFrame.startAnimation(AnimationUtils.loadAnimation(this, R.anim.pulse_glow));
+                    scanLine.startAnimation(AnimationUtils.loadAnimation(this, R.anim.scan_line_move));
+                });
+                animateView(infoSection, R.anim.slide_fade_up, 400L);
+                animateView(btnTelegram, R.anim.slide_fade_up, 550L);
+                animateView(btnContactDev, R.anim.slide_fade_up, 700L);
+                handler.postDelayed(this::showSupportDialog, 900L);
+            });
 
             if (launchIntent != null) {
                 Uri data = launchIntent.getData();
@@ -90,32 +113,98 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-
-            Dialog dialog = new Dialog(this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_support);
-            if (dialog.getWindow() != null) {
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-            }
-            dialog.setCancelable(true);
-            Button btnDialogTelegram = dialog.findViewById(R.id.btnDialogTelegram);
-            Button btnDialogLater = dialog.findViewById(R.id.btnDialogLater);
-            btnDialogTelegram.setOnClickListener(v -> {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SecurityUtils.getTelegramCommunity())));
-                dialog.dismiss();
-            });
-            btnDialogLater.setOnClickListener(v -> dialog.dismiss());
-            dialog.show();
         } else {
-            layoutDirectOpen.setVisibility(android.view.View.VISIBLE);
-            layoutIntentContent.setVisibility(android.view.View.GONE);
+            layoutDirectOpen.setVisibility(View.VISIBLE);
+            layoutIntentContent.setVisibility(View.GONE);
             loadLogo(ivLogo);
+            animateView(directHeaderSection, R.anim.slide_fade_down, 150L);
+            animateView(directInfoSection, R.anim.slide_fade_up, 350L);
         }
 
         btnTelegram.setOnClickListener(v ->
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SecurityUtils.getTelegramCommunity()))));
         btnContactDev.setOnClickListener(v ->
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SecurityUtils.getTelegramOwner()))));
+    }
+
+    private void animateTerminalBar() {
+        animateView(terminalBar, R.anim.fade_in, 0L);
+    }
+
+    private void runBootSequence(Runnable onComplete) {
+        tvStatus.setAlpha(1f);
+        typewriter(tvStatus, getString(R.string.status_boot), 35L, () ->
+                handler.postDelayed(() ->
+                        typewriter(tvStatus, getString(R.string.status_ready), 30L, onComplete), 400L));
+    }
+
+    private void typewriter(TextView textView, String fullText, long charDelay, Runnable onComplete) {
+        textView.setText("");
+        for (int i = 0; i <= fullText.length(); i++) {
+            final int index = i;
+            handler.postDelayed(() -> {
+                textView.setText(fullText.substring(0, index));
+                if (index == fullText.length() && onComplete != null) {
+                    onComplete.run();
+                }
+            }, index * charDelay);
+        }
+    }
+
+    private void animateView(View view, int animRes, long delay) {
+        animateView(view, animRes, delay, null);
+    }
+
+    private void animateView(View view, int animRes, long delay, Runnable onEnd) {
+        view.setAlpha(1f);
+        view.setTranslationY(0f);
+        Animation animation = AnimationUtils.loadAnimation(this, animRes);
+        animation.setStartOffset(delay);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.clearAnimation();
+                if (onEnd != null) {
+                    onEnd.run();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        view.startAnimation(animation);
+    }
+
+    private void showSupportDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_support);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+        dialog.setCancelable(true);
+        Button btnDialogTelegram = dialog.findViewById(R.id.btnDialogTelegram);
+        Button btnDialogLater = dialog.findViewById(R.id.btnDialogLater);
+        btnDialogTelegram.setOnClickListener(v -> {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(SecurityUtils.getTelegramCommunity())));
+            dialog.dismiss();
+        });
+        btnDialogLater.setOnClickListener(v -> dialog.dismiss());
+
+        View dialogRoot = dialog.findViewById(R.id.btnDialogTelegram).getRootView();
+        dialogRoot.setAlpha(0f);
+        dialogRoot.setTranslationY(60f);
+        dialog.show();
+        dialogRoot.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(500L)
+                .start();
     }
 
     private void loadLogo(ImageView imageView) {

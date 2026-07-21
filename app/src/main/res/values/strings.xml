@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Rebel Autopay</string>
-    <string name="brand_rebel">REBEL</string>
-    <string name="brand_autopay">Autopay</string>
-    <string name="qr_badge">UPI QR READY</string>
-    <string name="qr_title">Scan to Complete Payment</string>
-    <string name="qr_subtitle">Open any UPI app and scan this code</string>
-    <string name="support_title">Free Tool • Community Powered</string>
-    <string name="support_message">Built free for you. Join Telegram for updates, tools and support.</string>
-    <string name="join_telegram">Join Community</string>
-    <string name="contact_dev">Get Support</string>
-    <string name="direct_open_title">Setup Required</string>
-    <string name="direct_open_message">Open your payment app, start a UPI payment, and select Rebel Autopay from the list.</string>
-    <string name="direct_open_hint">Do not launch this app directly from home screen.</string>
-    <string name="dialog_title">Join Rebel Community</string>
-    <string name="dialog_message">Support us by joining our Telegram channel for new tools and updates.</string>
-    <string name="later">Skip</string>
+    <string name="brand_rebel">[ REBEL ]</string>
+    <string name="brand_autopay">AUTOPAY.sys</string>
+    <string name="qr_badge">[ LIVE ]</string>
+    <string name="qr_title">&gt; SCAN_QR.exe</string>
+    <string name="qr_subtitle">// UPI payment protocol active</string>
+    <string name="support_title">&gt; SYSTEM.msg</string>
+    <string name="support_message">Free tool for community. Join Telegram channel for updates and new exploits.</string>
+    <string name="join_telegram">&gt; JOIN_CHANNEL</string>
+    <string name="contact_dev">&gt; CONTACT_DEV</string>
+    <string name="direct_open_title">&gt; ACCESS_DENIED</string>
+    <string name="direct_open_message">Launch via payment app only. Select Rebel Autopay from UPI handler list.</string>
+    <string name="direct_open_hint">// Do not open directly from launcher</string>
+    <string name="status_boot">&gt; INITIALIZING REBEL AUTOPAY...</string>
+    <string name="status_ready">&gt; UPI PROTOCOL READY_</string>
+    <string name="dialog_title">&gt; JOIN_NETWORK</string>
+    <string name="dialog_message">Support the project. Join our Telegram for tools and updates.</string>
+    <string name="later">&gt; SKIP</string>
 </resources>

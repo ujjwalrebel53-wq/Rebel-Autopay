@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#0D0D18</color>
-    <color name="bg_gradient_start">#2A1245</color>
-    <color name="bg_gradient_end">#0A0A14</color>
-    <color name="accent_primary">#FF3B5C</color>
-    <color name="accent_secondary">#7C3AED</color>
-    <color name="accent_gold">#FBBF24</color>
-    <color name="card_bg">#17172A</color>
-    <color name="card_stroke">#2D2D4A</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#B4B4CC</color>
-    <color name="text_muted">#72728F</color>
+    <color name="bg_dark">#000000</color>
+    <color name="matrix_green">#00FF41</color>
+    <color name="matrix_green_dim">#00AA33</color>
+    <color name="matrix_green_glow">#39FF14</color>
+    <color name="hacker_red">#FF0040</color>
+    <color name="terminal_bg">#0A0F0A</color>
+    <color name="card_bg">#0D120D</color>
+    <color name="card_stroke">#00FF41</color>
+    <color name="text_primary">#00FF41</color>
+    <color name="text_secondary">#7ACC7A</color>
+    <color name="text_muted">#4A664A</color>
+    <color name="text_white">#E0FFE0</color>
 </resources>
