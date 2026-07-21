@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#0B0B1A</color>
+    <color name="bg_dark">#0D0D18</color>
+    <color name="bg_gradient_start">#2A1245</color>
+    <color name="bg_gradient_end">#0A0A14</color>
     <color name="accent_primary">#FF3B5C</color>
-    <color name="accent_secondary">#8B5CF6</color>
-    <color name="text_primary">#F5F5FA</color>
-    <color name="text_secondary">#A8A8C0</color>
-    <color name="text_muted">#6E6E88</color>
+    <color name="accent_secondary">#7C3AED</color>
+    <color name="accent_gold">#FBBF24</color>
+    <color name="card_bg">#17172A</color>
+    <color name="card_stroke">#2D2D4A</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B4B4CC</color>
+    <color name="text_muted">#72728F</color>
 </resources>

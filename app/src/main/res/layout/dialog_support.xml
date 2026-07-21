@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Support Rebel Autopay"
+        android:text="@string/dialog_title"
         android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -18,41 +18,33 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="14dp"
         android:gravity="center"
-        android:lineSpacingExtra="4dp"
-        android:text="This tool is built completely free for you. Please support us by joining our Telegram community."
+        android:lineSpacingExtra="5dp"
+        android:text="@string/dialog_message"
         android:textColor="@color/text_secondary"
         android:textSize="14sp" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btnDialogTelegram"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="50dp"
+        android:layout_marginTop="22dp"
+        android:background="@drawable/btn_gradient_primary"
+        android:text="@string/join_telegram"
+        android:textAllCaps="false"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnDialogTelegram"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_dialog_primary"
-            android:text="Join Telegram"
-            android:textColor="#000000"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnDialogLater"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_dialog_dark"
-            android:text="Later"
-            android:textColor="@color/text_muted"
-            android:textSize="13sp" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnDialogLater"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_ghost"
+        android:text="@string/later"
+        android:textAllCaps="false"
+        android:textColor="@color/text_muted"
+        android:textSize="14sp" />
 </LinearLayout>

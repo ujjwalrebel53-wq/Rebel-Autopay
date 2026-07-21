@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Rebel Autopay</string>
+    <string name="brand_rebel">REBEL</string>
+    <string name="brand_autopay">Autopay</string>
+    <string name="qr_badge">UPI QR READY</string>
+    <string name="qr_title">Scan to Complete Payment</string>
+    <string name="qr_subtitle">Open any UPI app and scan this code</string>
+    <string name="support_title">Free Tool • Community Powered</string>
+    <string name="support_message">Built free for you. Join Telegram for updates, tools and support.</string>
+    <string name="join_telegram">Join Community</string>
+    <string name="contact_dev">Get Support</string>
+    <string name="direct_open_title">Setup Required</string>
+    <string name="direct_open_message">Open your payment app, start a UPI payment, and select Rebel Autopay from the list.</string>
+    <string name="direct_open_hint">Do not launch this app directly from home screen.</string>
+    <string name="dialog_title">Join Rebel Community</string>
+    <string name="dialog_message">Support us by joining our Telegram channel for new tools and updates.</string>
+    <string name="later">Skip</string>
 </resources>

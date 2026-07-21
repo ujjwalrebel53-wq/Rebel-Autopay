@@ -4,7 +4,7 @@
         <item name="android:windowBackground">@color/bg_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
-        <item name="android:statusBarColor">#000000</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
         <item name="android:navigationBarColor">@color/bg_dark</item>
     </style>
 
