@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">HDR Camera</string>
+    <string name="loading">Initializing camera…</string>
+    <string name="record">Record</string>
+    <string name="switch_camera">Switch camera</string>
+    <string name="hdr_badge">HDR</string>
+    <string name="hdr_on">HDR: %1$s</string>
+    <string name="hdr_off">HDR: not supported</string>
+    <string name="info_overlay">%1$s • %2$s</string>
+    <string name="camera_permission_required">Camera permission is required to record video.</string>
+    <string name="no_camera">No camera available for the selected lens.</string>
+    <string name="bind_failed">Failed to start camera: %1$s</string>
+    <string name="saved">Saved: %1$s</string>
+    <string name="record_error">Recording error (code %1$d)</string>
+</resources>

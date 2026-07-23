@@ -5,6 +5,8 @@
 .DS_Store
 /build
 /app/build
+/camera/build
+**/build/
 /captures
 .externalNativeBuild
 .cxx
@@ -20,5 +22,6 @@ gen/
 out/
 release/
 skillx-release.keystore
+camera-release.keystore
 app/src/main/assets/sec/vault.bin
 app/src/main/cpp/encrypted_config.h
