@@ -14,6 +14,23 @@ device's camera supports. Built with Kotlin and CameraX.
 - Front/back camera switch, live recording timer, and an on-screen overlay showing the
   active resolution and HDR mode.
 
+## Snapchat-style advanced features (v2.0)
+
+- **12 colour-grading filters** (Vivid, Golden, Warm, Cool, Film, Fade, Vintage, Cyber,
+  Frost, Mono, Noir) rendered in real time by a custom OpenGL shader pipeline
+  (`CameraEffect` + `SurfaceProcessor`), so the grade is **baked into the recorded video
+  and photos**, not just the preview. Adjustable filter intensity slider.
+- **Tap = photo, hold = video** capture button (Snapchat-style). Photos are captured at the
+  sensor's maximum resolution (`CAPTURE_MODE_MAXIMIZE_QUALITY`) with the filter applied at
+  full resolution.
+- **Pinch to zoom** with live zoom-ratio display, **tap to focus** with focus ring,
+  **exposure compensation (EV) slider**, **torch/flash toggle**, **rule-of-thirds grid**,
+  and a **3s/10s countdown timer**.
+- Live filter switching *while recording* (between graded filters) with zero glitches —
+  it is just a shader uniform update.
+- "Original" filter = full **10-bit HDR** pipeline; graded filters run the maximum-quality
+  SDR pipeline (10-bit HDR and GL effects cannot be combined by CameraX).
+
 Because HDR support and available resolutions differ per device, the app queries the camera
 at runtime (`Recorder.getVideoCapabilities`) and adapts — it always uses the best the
 hardware can actually deliver rather than a hard-coded profile.

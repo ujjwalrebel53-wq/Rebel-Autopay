@@ -3,13 +3,23 @@
     <string name="loading">Initializing camera…</string>
     <string name="record">Record</string>
     <string name="switch_camera">Switch camera</string>
+    <string name="flash">Flash</string>
+    <string name="grid">Grid</string>
+    <string name="timer">Timer</string>
+    <string name="ev">EV</string>
     <string name="hdr_badge">HDR</string>
     <string name="hdr_on">HDR: %1$s</string>
-    <string name="hdr_off">HDR: not supported</string>
+    <string name="hdr_off">SDR</string>
+    <string name="filter_mode">Filter: %1$s</string>
     <string name="info_overlay">%1$s • %2$s</string>
+    <string name="capture_hint">Tap = photo • Hold = video</string>
     <string name="camera_permission_required">Camera permission is required to record video.</string>
     <string name="no_camera">No camera available for the selected lens.</string>
     <string name="bind_failed">Failed to start camera: %1$s</string>
     <string name="saved">Saved: %1$s</string>
+    <string name="photo_saved">Photo saved</string>
+    <string name="photo_error">Photo failed: %1$s</string>
     <string name="record_error">Recording error (code %1$d)</string>
+    <string name="filter_locked_recording">Filter mode locked while recording</string>
+    <string name="zoom_format">%.1fx</string>
 </resources>
