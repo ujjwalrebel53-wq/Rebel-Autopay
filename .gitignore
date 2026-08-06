@@ -5,12 +5,15 @@
 .DS_Store
 /build
 /app/build
+/camera/build
+**/build/
 /captures
 .externalNativeBuild
 .cxx
 *.apk
 !Rebel Autopay.apk
 !Rebel-Autopay-v2.3.apk
+!HDR-Camera-v3.0.apk
 *.ap_
 *.aab
 *.dex
@@ -20,5 +23,6 @@ gen/
 out/
 release/
 skillx-release.keystore
+camera-release.keystore
 app/src/main/assets/sec/vault.bin
 app/src/main/cpp/encrypted_config.h

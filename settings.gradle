@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Rebel-Autopay"
 include ':app'
+include ':camera'
