@@ -31,6 +31,23 @@ device's camera supports. Built with Kotlin and CameraX.
 - "Original" filter = full **10-bit HDR** pipeline; graded filters run the maximum-quality
   SDR pipeline (10-bit HDR and GL effects cannot be combined by CameraX).
 
+## DSLR-grade quality (v3.0)
+
+- **PRO computational-photography modes** via CameraX **Camera Extensions**: **HDR+**,
+  **Night**, **Portrait (Bokeh / shallow depth-of-field)**, **Face Retouch**, and **Auto**.
+  These use the device vendor's tuned multi-frame processing — the same engines behind the
+  phone's stock "Pro"/"Portrait" camera — giving that DSLR look (clean shadows, natural
+  bokeh, low-light detail). The `PRO` button cycles only the modes the current lens actually
+  supports and hides itself when none are available.
+- **Max-resolution stills**: photos captured at the sensor's highest resolution with
+  `CAPTURE_MODE_MAXIMIZE_QUALITY` and JPEG quality 100; overlay shows the live megapixel count.
+- **DSLR-grade video bitrate**: the encoder is asked for a very high target bitrate scaled to
+  resolution (~100 Mbps at 4K, ~32 Mbps at 1080p) so footage stays crisp with minimal
+  compression artefacts (the encoder clamps to its own maximum).
+- PRO modes are photo-oriented (Camera Extensions don't support video capture), so while a
+  PRO mode is active the capture button takes photos; picking a colour filter or tapping PRO
+  again returns to the HDR video pipeline.
+
 Because HDR support and available resolutions differ per device, the app queries the camera
 at runtime (`Recorder.getVideoCapabilities`) and adapts — it always uses the best the
 hardware can actually deliver rather than a hard-coded profile.

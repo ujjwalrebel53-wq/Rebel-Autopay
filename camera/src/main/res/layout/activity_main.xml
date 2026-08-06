@@ -101,10 +101,32 @@
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:id="@+id/proButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/switch_button_bg"
+            android:gravity="center"
+            android:text="@string/pro"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/proLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#FFD54F"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <ImageButton
             android:id="@+id/flashButton"
             android:layout_width="44dp"
             android:layout_height="44dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/switch_button_bg"
             android:src="@drawable/ic_flash_off"
             android:contentDescription="@string/flash"

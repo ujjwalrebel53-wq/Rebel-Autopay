@@ -37,6 +37,8 @@ import androidx.camera.core.Preview
 import androidx.camera.core.UseCaseGroup
 import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
+import androidx.camera.extensions.ExtensionMode
+import androidx.camera.extensions.ExtensionsManager
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.MediaStoreOutputOptions
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private var cameraProvider: ProcessCameraProvider? = null
+    private var extensionsManager: ExtensionsManager? = null
     private var camera: Camera? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
@@ -75,6 +78,17 @@ class MainActivity : AppCompatActivity() {
     private var timerSeconds = 0
     private var filterIntensity = 1f
     private var countdownActive = false
+
+    /** Active Camera-Extension (computational photography) mode; NONE = standard pipeline. */
+    private var proMode = ExtensionMode.NONE
+    private val proModeCandidates = listOf(
+        ExtensionMode.NONE,
+        ExtensionMode.AUTO,
+        ExtensionMode.HDR,
+        ExtensionMode.NIGHT,
+        ExtensionMode.BOKEH,
+        ExtensionMode.FACE_RETOUCH
+    )
 
     private val glProcessor = GlFilterProcessor()
     private val colorEffect = ColorGradeEffect(glProcessor)
@@ -144,7 +158,8 @@ class MainActivity : AppCompatActivity() {
         binding.captureButton.setOnTouchListener { _, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (activeRecording == null && !countdownActive) {
+                    // Hold-to-record only when a video pipeline is active (not in PRO photo mode).
+                    if (activeRecording == null && !countdownActive && videoCapture != null) {
                         longPressTriggered = false
                         mainHandler.postDelayed(longPressRunnable, 350)
                     }
@@ -166,6 +181,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpControls() {
         binding.switchButton.setOnClickListener { switchCamera() }
+
+        binding.proButton.setOnClickListener { cyclePro() }
 
         binding.flashButton.setOnClickListener {
             torchOn = !torchOn
@@ -265,28 +282,141 @@ class MainActivity : AppCompatActivity() {
     private fun startCamera() {
         val future = ProcessCameraProvider.getInstance(this)
         future.addListener({
-            cameraProvider = future.get()
-            bindUseCases()
+            val provider = future.get()
+            cameraProvider = provider
+            val extFuture = ExtensionsManager.getInstanceAsync(this, provider)
+            extFuture.addListener({
+                extensionsManager = try {
+                    extFuture.get()
+                } catch (e: Exception) {
+                    null
+                }
+                bindUseCases()
+            }, ContextCompat.getMainExecutor(this))
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun availableProModes(baseSelector: CameraSelector): List<Int> {
+        val mgr = extensionsManager ?: return listOf(ExtensionMode.NONE)
+        return proModeCandidates.filter {
+            it == ExtensionMode.NONE || mgr.isExtensionAvailable(baseSelector, it)
+        }
+    }
+
+    private fun cyclePro() {
+        if (activeRecording != null) {
+            Toast.makeText(this, R.string.pro_locked_recording, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val baseSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        val modes = availableProModes(baseSelector)
+        val currentIdx = modes.indexOf(proMode).coerceAtLeast(0)
+        proMode = modes[(currentIdx + 1) % modes.size]
+        bindUseCases()
+    }
+
+    private fun proModeName(mode: Int): String = when (mode) {
+        ExtensionMode.AUTO -> getString(R.string.mode_auto)
+        ExtensionMode.HDR -> getString(R.string.mode_hdr)
+        ExtensionMode.NIGHT -> getString(R.string.mode_night)
+        ExtensionMode.BOKEH -> getString(R.string.mode_portrait)
+        ExtensionMode.FACE_RETOUCH -> getString(R.string.mode_retouch)
+        else -> ""
     }
 
     private fun currentFilter(): CameraFilter = Filters.ALL[filterAdapter.selectedIndex]
 
+    private fun newImageCapture(): ImageCapture =
+        ImageCapture.Builder()
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+            .setJpegQuality(100)
+            .setResolutionSelector(
+                ResolutionSelector.Builder()
+                    .setResolutionStrategy(ResolutionStrategy.HIGHEST_AVAILABLE_STRATEGY)
+                    .build()
+            )
+            .build()
+
     private fun bindUseCases() {
         val provider = cameraProvider ?: return
-        provider.unbindAll()
-        camera = null
 
-        val cameraSelector = CameraSelector.Builder()
+        val baseSelector = CameraSelector.Builder()
             .requireLensFacing(lensFacing)
             .build()
 
         val cameraInfo: CameraInfo? =
-            cameraSelector.filter(provider.availableCameraInfos).firstOrNull()
+            baseSelector.filter(provider.availableCameraInfos).firstOrNull()
         if (cameraInfo == null) {
             Toast.makeText(this, R.string.no_camera, Toast.LENGTH_LONG).show()
             return
         }
+
+        // The selected PRO extension may not exist on this lens (e.g. no front Bokeh).
+        if (proMode != ExtensionMode.NONE && proMode !in availableProModes(baseSelector)) {
+            proMode = ExtensionMode.NONE
+        }
+
+        if (proMode != ExtensionMode.NONE) {
+            bindProMode(provider, baseSelector, cameraInfo)
+        } else {
+            bindStandard(provider, baseSelector, cameraInfo)
+        }
+        refreshProButton(baseSelector)
+    }
+
+    /** DSLR-grade computational-photography pipeline (Camera Extensions): preview + max-res photo. */
+    private fun bindProMode(
+        provider: ProcessCameraProvider,
+        baseSelector: CameraSelector,
+        cameraInfo: CameraInfo
+    ) {
+        val mgr = extensionsManager
+        if (mgr == null) {
+            proMode = ExtensionMode.NONE
+            bindStandard(provider, baseSelector, cameraInfo)
+            return
+        }
+        provider.unbindAll()
+        camera = null
+        videoCapture = null
+        glProcessor.setFilter(null, 0f)
+
+        val extSelector = mgr.getExtensionEnabledCameraSelector(baseSelector, proMode)
+        val preview = Preview.Builder().build().also {
+            it.setSurfaceProvider(binding.previewView.surfaceProvider)
+        }
+        val photo = newImageCapture()
+
+        try {
+            camera = provider.bindToLifecycle(this, extSelector, preview, photo)
+            imageCapture = photo
+        } catch (e: Exception) {
+            proMode = ExtensionMode.NONE
+            bindStandard(provider, baseSelector, cameraInfo)
+            return
+        }
+
+        camera?.let { cam ->
+            if (torchOn) cam.cameraControl.enableTorch(true)
+            configureEvSlider(cam)
+        }
+        binding.intensitySlider.visibility = View.GONE
+        binding.captureHint.text = getString(R.string.pro_hint_photo, proModeName(proMode))
+        binding.infoText.text = getString(
+            R.string.info_overlay,
+            photoResText(photo),
+            proModeName(proMode)
+        )
+        binding.hdrBadge.visibility = View.GONE
+    }
+
+    private fun bindStandard(
+        provider: ProcessCameraProvider,
+        cameraSelector: CameraSelector,
+        cameraInfo: CameraInfo
+    ) {
+        provider.unbindAll()
+        camera = null
 
         val capabilities = Recorder.getVideoCapabilities(cameraInfo)
         val filter = currentFilter()
@@ -305,6 +435,8 @@ class MainActivity : AppCompatActivity() {
             .setQualitySelector(
                 QualitySelector.from(bestQuality, FallbackStrategy.higherQualityOrLowerThan(Quality.SD))
             )
+            // DSLR-grade footage: request a very high encoder bitrate (encoder clamps to its max).
+            .setTargetVideoEncodingBitRate(targetBitRate(bestQuality))
             .build()
 
         val capture = VideoCapture.Builder(recorder)
@@ -316,14 +448,7 @@ class MainActivity : AppCompatActivity() {
             it.setSurfaceProvider(binding.previewView.surfaceProvider)
         }
 
-        val photo = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-            .setResolutionSelector(
-                ResolutionSelector.Builder()
-                    .setResolutionStrategy(ResolutionStrategy.HIGHEST_AVAILABLE_STRATEGY)
-                    .build()
-            )
-            .build()
+        val photo = newImageCapture()
 
         if (filterActive) {
             glProcessor.setFilter(filter.matrix, filterIntensity)
@@ -358,6 +483,7 @@ class MainActivity : AppCompatActivity() {
                 if (torchOn) cam.cameraControl.enableTorch(true)
                 configureEvSlider(cam)
             }
+            binding.captureHint.text = getString(R.string.capture_hint)
             updateInfoOverlay(cameraInfo, bestQuality, dynamicRange, isHdr, filter)
             return
         }
@@ -365,7 +491,36 @@ class MainActivity : AppCompatActivity() {
         if (torchOn) boundCamera.cameraControl.enableTorch(true)
         configureEvSlider(boundCamera)
 
+        binding.captureHint.text = getString(R.string.capture_hint)
+        binding.intensitySlider.visibility = if (filterActive) View.VISIBLE else View.GONE
         updateInfoOverlay(cameraInfo, bestQuality, dynamicRange, isHdr, filter)
+    }
+
+    private fun refreshProButton(baseSelector: CameraSelector) {
+        val hasExtensions = availableProModes(baseSelector).size > 1
+        binding.proButton.visibility = if (hasExtensions) View.VISIBLE else View.GONE
+        if (proMode == ExtensionMode.NONE) {
+            binding.proButton.alpha = 0.6f
+            binding.proLabel.visibility = View.GONE
+        } else {
+            binding.proButton.alpha = 1f
+            binding.proLabel.visibility = View.VISIBLE
+            binding.proLabel.text = proModeName(proMode)
+        }
+    }
+
+    private fun photoResText(photo: ImageCapture): String {
+        val res = photo.resolutionInfo?.resolution ?: return getString(R.string.mode_hdr)
+        val mp = (res.width.toLong() * res.height) / 1_000_000.0
+        return String.format(Locale.US, "%dx%d (%.0fMP)", res.width, res.height, mp)
+    }
+
+    private fun targetBitRate(quality: Quality): Int = when (quality) {
+        Quality.UHD -> 100_000_000
+        Quality.FHD -> 32_000_000
+        Quality.HD -> 16_000_000
+        Quality.SD -> 6_000_000
+        else -> 60_000_000
     }
 
     private fun configureEvSlider(cam: Camera) {
@@ -420,7 +575,9 @@ class MainActivity : AppCompatActivity() {
     // ---------------------------------------------------------------- filters
 
     private fun onFilterSelected(index: Int) {
-        if (index == filterAdapter.selectedIndex) return
+        // Choosing a filter leaves PRO (extensions) mode and returns to the video pipeline.
+        val leavingPro = proMode != ExtensionMode.NONE
+        if (index == filterAdapter.selectedIndex && !leavingPro) return
         val oldOriginal = filterAdapter.selectedIndex == 0
         val newOriginal = index == 0
 
@@ -434,7 +591,10 @@ class MainActivity : AppCompatActivity() {
         val filter = currentFilter()
         binding.intensitySlider.visibility = if (filter.matrix != null) View.VISIBLE else View.GONE
 
-        if (oldOriginal != newOriginal) {
+        if (leavingPro) {
+            proMode = ExtensionMode.NONE
+            bindUseCases()
+        } else if (oldOriginal != newOriginal) {
             bindUseCases()
         } else {
             filter.matrix?.let { glProcessor.setFilter(it, filterIntensity) }

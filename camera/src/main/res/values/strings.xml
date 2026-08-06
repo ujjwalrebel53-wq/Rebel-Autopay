@@ -22,4 +22,13 @@
     <string name="record_error">Recording error (code %1$d)</string>
     <string name="filter_locked_recording">Filter mode locked while recording</string>
     <string name="zoom_format">%.1fx</string>
+    <string name="pro">PRO</string>
+    <string name="pro_mode">%1$s</string>
+    <string name="pro_hint_photo">%1$s mode — tap for photo (video off)</string>
+    <string name="pro_locked_recording">PRO mode unavailable while recording</string>
+    <string name="mode_auto">Auto</string>
+    <string name="mode_hdr">HDR+</string>
+    <string name="mode_night">Night</string>
+    <string name="mode_portrait">Portrait</string>
+    <string name="mode_retouch">Retouch</string>
 </resources>
