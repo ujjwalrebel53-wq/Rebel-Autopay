@@ -22,3 +22,6 @@ release/
 skillx-release.keystore
 app/src/main/assets/sec/vault.bin
 app/src/main/cpp/encrypted_config.h
+__pycache__/
+*.pyc
+payment-bot/payments.db
